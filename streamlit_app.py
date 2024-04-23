@@ -23,6 +23,18 @@ def mysql_connection_eshows():
     )    
   return conn_eshows
 
+def mysql_connection_grupoe():
+  mysql_config = st.secrets["mysql_grupoe"]
+
+  conn_grupoe = mysql.connector.connect(
+        host=mysql_config['host'],
+        port=mysql_config['port'],
+        database=mysql_config['database'],
+        user=mysql_config['username'],
+        password=mysql_config['password']
+    )    
+  return conn_grupoe
+
 def execute_query(query, conn):
     cursor = conn.cursor()
     cursor.execute(query)
@@ -46,6 +58,7 @@ def run():
 
     ######## Puxando Dados #########
     conn_eshows = mysql_connection_eshows()
+    conn_grupoe = mysql_connection_grupoe()
 
     def teste():
         result, column_names = execute_query(GET_TESTE, conn_eshows)
@@ -58,5 +71,17 @@ def run():
 
     df_teste
 
+    def custos_internos():
+        result, column_names = execute_query(GET_CUSTOS_INTERNOS, conn_grupoe)
+        df_custos_internos = pd.DataFrame(result, columns=column_names)
+
+        df_custos_internos['Data_Vencimento'] = pd.to_datetime(df_custos_internos['Data_Vencimento'])
+
+        return df_custos_internos
+    df_custos_internos = custos_internos()
+
+    df_custos_internos    
+
 if __name__ == "__main__":
     run()
+
