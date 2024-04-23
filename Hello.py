@@ -9,8 +9,6 @@ from utils.queries import *
 # from workalendar.america import Brazil
 # import openpyxl
 
-st.write('Hello world!')
-
 LOGGER = get_logger(__name__)
 
 def mysql_connection():
@@ -42,9 +40,12 @@ def run():
 
     ######## Config Pag ##########
     st.set_page_config(
-    page_title="Fluxo_Financeiro_FB",
-    page_icon="💰",
+    page_title="Dash_Eshows",
+    page_icon="🎵",
     )
+
+    ######## Puxando Dados #########
+    conn = mysql_connection()
 
     def teste():
         result, column_names = execute_query(GET_TESTE, conn)
