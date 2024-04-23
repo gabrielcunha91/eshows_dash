@@ -11,10 +11,10 @@ from utils.queries import *
 
 LOGGER = get_logger(__name__)
 
-def mysql_connection():
+def mysql_connection_eshows():
   mysql_config = st.secrets["mysql_eshows"]
 
-  conn = mysql.connector.connect(
+  conn_eshows = mysql.connector.connect(
         host=mysql_config['host'],
         port=mysql_config['port'],
         database=mysql_config['database'],
@@ -45,7 +45,7 @@ def run():
     )
 
     ######## Puxando Dados #########
-    conn = mysql_connection()
+    conn_eshows = mysql_connection_eshows()
 
     def teste():
         result, column_names = execute_query(GET_TESTE, conn_eshows)
