@@ -12,7 +12,7 @@ from utils.queries import *
 LOGGER = get_logger(__name__)
 
 def mysql_connection():
-  mysql_config = st.secrets["mysql"]
+  mysql_config = st.secrets["mysql_eshows"]
 
   conn = mysql.connector.connect(
         host=mysql_config['host'],
@@ -21,7 +21,7 @@ def mysql_connection():
         user=mysql_config['username'],
         password=mysql_config['password']
     )    
-  return conn
+  return conn_eshows
 
 def execute_query(query, conn):
     cursor = conn.cursor()
@@ -48,7 +48,7 @@ def run():
     conn = mysql_connection()
 
     def teste():
-        result, column_names = execute_query(GET_TESTE, conn)
+        result, column_names = execute_query(GET_TESTE, conn_eshows)
         df_teste = pd.DataFrame(result, columns=column_names)
 
         df_teste['Data_Show'] = pd.to_datetime(df_teste['Data_Show'])
