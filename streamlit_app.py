@@ -80,9 +80,7 @@ def run():
         return df_view_faturam_eshows
     df_view_faturam_eshows = view_faturam_eshows()
 
-    df_view_faturam_eshows
-
-
+    
     def custos_internos():
         result, column_names = execute_query(GET_CUSTOS_INTERNOS, conn_grupoe)
         df_custos_internos = pd.DataFrame(result, columns=column_names)
@@ -93,6 +91,20 @@ def run():
     df_custos_internos = custos_internos()
 
     df_custos_internos    
+
+
+    ######## Definindo Relatorio ########
+    st.write("# Dash Eshows")
+
+    st.markdown(
+        """
+        Utilize as abas localizadas no lado esquerdo para buscar suas análises.
+    """
+    ) 
+
+    if "view_faturam_eshows" not in st.session_state:
+        st.session_state["view_faturam_eshows"] = df_view_faturam_eshows  
+
 
 if __name__ == "__main__":
     run()
