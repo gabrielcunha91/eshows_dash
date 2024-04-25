@@ -17,9 +17,9 @@ df_view_faturam_eshows
 
 
 ### Agrupamentos ###
-df_view_faturam_ajustado = df_view_faturam_eshows[["Primeiro_Dia_Mes", "Valor_Bruto", "Valor_Total"]]
+df_view_faturam_ajustado = df_view_faturam_eshows[["Primeiro_Dia_Mes", "Casa", "Valor_Total"]]
 
-df_view_faturam_por_mes =df_view_faturam_ajustado.groupby("Primeiro_Dia_Mes").sum()
+df_view_faturam_por_mes =df_view_faturam_ajustado.groupby("Primeiro_Dia_Mes").agg({"Casa": "nunique", "Valor_Total": "sum"})
 
 df_view_faturam_por_mes
 
