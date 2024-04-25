@@ -71,6 +71,18 @@ def run():
 
     df_teste
 
+    def view_faturam_eshows():
+        result, column_names = execute_query(GET_VIEW_FATURAM_ESHOWS, conn_eshows)
+        df_view_faturam_eshows = pd.DataFrame(result, columns=column_names)   
+
+        df_view_faturam_eshows['Data'] = pd.to_datetime(df_view_faturam_eshows['Data'])    
+
+        return df_view_faturam_eshows
+    df_view_faturam_eshows = view_faturam_eshows()
+
+    df_view_faturam_eshows
+
+
     def custos_internos():
         result, column_names = execute_query(GET_CUSTOS_INTERNOS, conn_grupoe)
         df_custos_internos = pd.DataFrame(result, columns=column_names)
@@ -84,4 +96,7 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+
+
 

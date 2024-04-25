@@ -8,6 +8,9 @@ FROM View_Faturam_Eshows vfe
 LIMIT 5
 """
 
+GET_VIEW_FATURAM_ESHOWS = """
+SELECT * FROM View_Faturam_Eshows
+"""
 
 GET_CUSTOS_INTERNOS = """
 SELECT
