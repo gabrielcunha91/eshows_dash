@@ -60,16 +60,6 @@ def run():
     conn_eshows = mysql_connection_eshows()
     conn_grupoe = mysql_connection_grupoe()
 
-    def teste():
-        result, column_names = execute_query(GET_TESTE, conn_eshows)
-        df_teste = pd.DataFrame(result, columns=column_names)
-
-        df_teste['Data_Show'] = pd.to_datetime(df_teste['Data_Show'])
-
-        return df_teste
-    df_teste = teste()  
-
-    df_teste
 
     def view_faturam_eshows():
         result, column_names = execute_query(GET_VIEW_FATURAM_ESHOWS, conn_eshows)
@@ -89,8 +79,6 @@ def run():
 
         return df_custos_internos
     df_custos_internos = custos_internos()
-
-    df_custos_internos    
 
 
     ######## Definindo Relatorio ########

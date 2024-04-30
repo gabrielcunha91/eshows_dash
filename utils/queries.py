@@ -1,15 +1,18 @@
 
-GET_TESTE = """
-SELECT 
-vfe.p_ID as 'p_ID',
-vfe.Casa as 'Casa',
-vfe.`Data` as 'Data_Show'
-FROM View_Faturam_Eshows vfe
-LIMIT 5
-"""
 
 GET_VIEW_FATURAM_ESHOWS = """
-SELECT * FROM View_Faturam_Eshows
+SELECT
+vfe.*,
+tgdc.NOME as 'Grupo',
+tke.KEYACCOUNT as 'KeyAccount',
+to2.NOME as 'Operador'
+FROM View_Faturam_Eshows vfe
+INNER JOIN T_COMPANIES tc ON (vfe.c_ID = tc.ID)
+LEFT JOIN T_GRUPOS_DE_CLIENTES tgdc ON (tc.FK_GRUPO = tgdc.ID)
+LEFT JOIN T_KEYACCOUNT_ESTABELECIMENTO tke ON (tc.FK_KEYACCOUNT = tke.ID)
+LEFT JOIN T_OPERADORES to2 ON (tc.FK_OPERADOR = to2.ID)
+WHERE vfe.`Data` > '2023-01-01 00:00:00'
+ORDER BY vfe.`Data`, vfe.Casa  
 """
 
 GET_CUSTOS_INTERNOS = """
