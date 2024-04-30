@@ -15,6 +15,64 @@ WHERE vfe.`Data` > '2023-01-01 00:00:00'
 ORDER BY vfe.`Data`, vfe.Casa  
 """
 
+GET_FATURAM_FISCAL = """
+SELECT
+tp.ID as 'tp_ID',
+tf.ID as 'tf_ID',
+tf.DATA_SHOW as 'Data_Show',
+DATE_FORMAT(tf.DATA_SHOW, '%m/%Y') as 'Mes_Ano',
+tc.NAME as 'Casa',
+tc.ID as 'Casa_ID',
+tc.NOTA_FISCAL as 'Casa_Exige_NF',
+tgdc.GRUPO_CLIENTES as 'Grupo_Cliente',
+ta.NOME as 'Artista',
+ta.ID as 'Artista_ID',
+REGEXP_REPLACE(tab.NUMERO_DOCUMENTO, '[^a-zA-Z0-9]', '') as 'Documento_Artista',
+tp.TRANSACTION_ID as 'Boleto_ID',
+DATE(tb.DATA_VENCIMENTO) as 'Data_Venc_Boleto',
+tb.STATUS as 'Status_Boleto',
+DATE(tb.DATA_PAGAMENTO) as 'Data_Pgto_Boleto',
+DATE(tp.DATA_PAGAMENTO) as 'Data_Pgto_Artista',
+tp.VALOR_BRUTO as 'Valor_Bruto',
+tp.VALOR_LIQUIDO as 'Valor_Liquido',
+tf.FATURAM_COMISSAO_ARTISTA as 'Faturam_Comissao_Artista',
+tf.FATURAM_ADIANT_ARTISTA as 'Faturam_Adiant_Artista',
+tf.FATURAM_ADIANT_CONTRATANTE as 'Faturam_Adiant_Contratante',
+tf.FATURAM_SAAS_PERCENTUAL as 'Faturam_Saas_Percentual',
+tf.FATURAM_SAAS_MENSALIDADE as 'Faturam_Saas_Mensalidade',
+tf.FATURAM_CURADORIA as 'Faturam_Curadoria',
+tf.NF_FATURAM_PELO_ARTISTA as 'NF_Pelo_Artista',
+tf.NF_FATURAM_CONTRA_ARTISTA as 'NF_Contra_Artista',
+tf.NF_FATURAM_CONTRA_CONTRATANTE as 'NF_Contra_Contratante',
+(tf.FATURAM_COMISSAO_ARTISTA
+ + tf.FATURAM_ADIANT_ARTISTA
+ + tf.FATURAM_ADIANT_CONTRATANTE
+ + tf.FATURAM_SAAS_PERCENTUAL
+ + tf.FATURAM_SAAS_MENSALIDADE
+ + tf.FATURAM_CURADORIA) as 'Faturamento_Total',
+tf.DATA_PROCESSADO_NOTA as 'Data_Processam_NF',
+SUBSTRING_INDEX(SUBSTRING_INDEX(tf.NOTA_URL_PDF_PREFEITURA, 'nf=', -1), '&verificacao', 1) AS 'Numero_NF_Eshows',
+tf.NOTA_URL_PDF_PREFEITURA as 'Link_NF_Eshows',
+tf.NOTA_ERRO as 'Erro_NF',
+tf.NOTA_EMAIL_ERRO as 'NOTA_EMAIL_ERRO',
+tnf.NUMERO_NOTA_FISCAL as 'Numero_NF_Artista',
+ef.FILENAME as 'Link_NF_Artista'
+FROM T_FATURAMENTO tf 
+INNER JOIN T_PROPOSTAS tp ON (tf.FK_PROPOSTA = tp.ID)
+INNER JOIN T_ATRACOES ta ON (tp.FK_CONTRATADO = ta.ID)
+INNER JOIN T_COMPANIES tc ON (tp.FK_CONTRANTE = tc.ID)
+LEFT JOIN T_ATRACAO_BANCOS tab ON (tp.FK_ATRACAO_BANCO = tab.ID)
+LEFT JOIN T_GRUPOS_DE_CLIENTES tgdc ON (tc.FK_GRUPO = tgdc.ID)
+LEFT JOIN T_BOLETOS tb ON (tp.TRANSACTION_ID = tb.ID)
+LEFT JOIN T_NOTAS_FISCAIS tnf ON (tp.FK_NOTA_FISCAL = tnf.ID AND tnf.FK_STATUS_NF = 101)
+LEFT JOIN EPM_FILES ef ON (ef.TABLE_NAME = "T_NOTAS_FISCAIS" AND ef.TABLE_ID = tnf.ID)
+WHERE tf.DATA_SHOW > '2023-01-01 00:00:00'
+# AND tf.DATA_SHOW < '2024-04-01 00:00:00'
+# AND tf.DATA_PROCESSADO_NOTA >= '2023-12-01 00:00:00'
+# AND tf.NOTA_URL_PDF_PREFEITURA IS NOT NULL
+ORDER BY tf.ID DESC
+"""
+
 GET_CUSTOS_INTERNOS = """
 SELECT
 	tcie.ID as 'ID_Despesa',
