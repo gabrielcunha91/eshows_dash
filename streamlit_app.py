@@ -6,8 +6,35 @@ import numpy as np
 from datetime import datetime
 import mysql.connector
 from utils.queries import *
+from utils.user import *
 # from workalendar.america import Brazil
 # import openpyxl
+
+def handle_login(userName, userPassoword):
+    if"@eshows.com.br" not in userName:
+        st.error("Usuário fora do domínio Eshows! Tente com seu email @eshows.")
+        return
+    
+    if user_data := login(userName, userPassoword):
+        st.session_state["loggedIn"] = True
+        st.session_state["user_data"] = user_data
+    else:
+        st.session_state["loggedIn"] = False
+        st.error("Email ou senha inválidos!")
+
+def show_login_page():
+    st.markdown(""" 
+    <style>
+        section[data-testid="stSidebar"][aria-expanded="true"]{
+                display: none;
+                }
+    </style>
+    """, unsafe_allow_html=True)
+    col1, col2 = st.columns([4,1])
+    col1.write("## DashBoard")
+    userName = st.text_input(label="", value="", placeholder="login")
+    userPassword = st.text_input(label="", value="", placeholder="Senha",type="password", label_visibility="")
+    st.button("login", on_click=handle_login, args=(userName, userPassword))
 
 LOGGER = get_logger(__name__)
 
@@ -49,12 +76,6 @@ def execute_query(query, conn):
     return result, column_names
 
 def run():
-
-    ######## Config Pag ##########
-    st.set_page_config(
-    page_title="Dash_Eshows",
-    page_icon="🎵",
-    )
 
     ######## Puxando Dados #########
     conn_eshows = mysql_connection_eshows()
@@ -105,7 +126,22 @@ def run():
         st.session_state["faturam_fiscal"] = df_faturam_fiscal
 
 if __name__ == "__main__":
-    run()
+     ######## Config Pag ##########
+    st.set_page_config(
+    page_title="Dash_Eshows",
+    page_icon="🎵",
+    )
+    
+    if "loggedIn" not in st.session_state:
+        st.session_state["loggedIn"] = False
+        st.session_state["user_date"] = None
+
+    if not st.session_state["loggedIn"]:
+        show_login_page()
+        st.stop()
+    else:
+        run()
+
 
 
 
