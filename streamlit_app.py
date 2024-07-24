@@ -32,8 +32,8 @@ def show_login_page():
     """, unsafe_allow_html=True)
     col1, col2 = st.columns([4,1])
     col1.write("## DashBoard")
-    userName = st.text_input(label="", value="", placeholder="login")
-    userPassword = st.text_input(label="", value="", placeholder="Senha",type="password", label_visibility="")
+    userName = st.text_input(label="", value="", placeholder="Login", label_visibility="collapsed")
+    userPassword = st.text_input(label="", value="", placeholder="Senha",type="password", label_visibility="collapsed")
     st.button("login", on_click=handle_login, args=(userName, userPassword))
 
 LOGGER = get_logger(__name__)
