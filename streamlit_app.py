@@ -11,8 +11,10 @@ from utils.user import *
 # import openpyxl
 
 def handle_login(userName, userPassoword):
-    if"@eshows.com.br" not in userName:
-        st.error("Usuário fora do domínio Eshows! Tente com seu email @eshows.")
+    users = st.secrets["users"]
+
+    if userName not in users['emails']:
+        st.error("Usuário sem permissão.")
         return
     
     if user_data := login(userName, userPassoword):
@@ -30,6 +32,7 @@ def show_login_page():
                 }
     </style>
     """, unsafe_allow_html=True)
+    
     col1, col2 = st.columns([4,1])
     col1.write("## DashBoard")
     userName = st.text_input(label="", value="", placeholder="Login", label_visibility="collapsed")
@@ -132,6 +135,9 @@ if __name__ == "__main__":
     page_icon="🎵",
     )
     
+    with st.sidebar:
+        st.button(label="Logout", on_click=logout)
+
     if "loggedIn" not in st.session_state:
         st.session_state["loggedIn"] = False
         st.session_state["user_date"] = None
